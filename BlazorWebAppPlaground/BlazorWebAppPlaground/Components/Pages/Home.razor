@@ -1,0 +1,24 @@
+﻿@page "/"
+@inject IJSRuntime JS
+
+@rendermode RenderMode.InteractiveServer
+
+<PageTitle>Home </PageTitle>
+
+@_isConfirmed
+
+<button @onclick="OnCLickAsync">click me</button>
+
+@code {
+
+    private int _count = 0;
+    private bool _isConfirmed = false;
+
+
+    private async Task OnCLickAsync()
+    {
+        _count++;
+        _isConfirmed = await JS.InvokeAsync<bool>(
+               "myFunction",  $"Hello from interop call!{_count}");
+    }
+}
