@@ -11,7 +11,7 @@ public static class EndPoints
     {
         app.MapPost("createCategories", 
             CreateCategoriesCommand.SeedAsync);
-        app.MapGet("scoped", GetCount);
+        app.MapGet("servicelifetimeendpoint", GetCount);
 
         return app;
     }

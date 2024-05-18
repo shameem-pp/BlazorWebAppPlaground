@@ -1,0 +1,25 @@
+﻿
+@page "/serviceLifeTimeExample"
+@using System.Text.Json
+@rendermode RenderMode.InteractiveAuto
+
+<h1> Total objects created : @TotalNoOfObjectsCreated</h1>
+<button @onclick="OnRequest">Request</button>
+
+@code
+{
+    [Inject]
+    public required HttpClient HttpClient { get; set; }
+    public int TotalNoOfObjectsCreated { get; set; }
+
+    private async Task OnRequest()
+    {
+        var httpResponse = await HttpClient
+            .GetAsync("/servicelifetimeendpoint");
+
+        var response = await httpResponse.Content.ReadAsStringAsync();
+        TotalNoOfObjectsCreated = JsonSerializer.Deserialize<int>(response);
+    }
+}
+
+
