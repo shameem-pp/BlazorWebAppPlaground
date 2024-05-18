@@ -1,0 +1,70 @@
+﻿
+@page "/inputselect"
+@using BlazorWebAppPlaground.Client.ApiServices
+
+@rendermode RenderMode.InteractiveAuto
+
+<h3>InputSelectExample</h3>
+
+<EditForm Model="Vm">
+    <label>City Name</label>
+    <InputText @bind-Value="Vm.CityName"/>
+    <label>Country</label>
+    <InputSelect Value="Vm.CountryId" 
+    ValueExpression="@(() => Vm.CountryId)"
+    ValueChanged="@((int countryId) => OnCountryChanged(countryId))">
+
+        <option value="0">select</option>
+        @foreach (var item in Countries)
+        {
+            <option value="@item.Id">@item.Name</option>
+        }
+    </InputSelect>
+    <label>State</label>
+    <InputSelect @bind-Value="Vm.StateId">
+        <option value="0">select</option>
+        @foreach (var item in States)
+        {
+            <option value="@item.Id">@item.Name</option>
+        }
+    </InputSelect>
+</EditForm>
+
+@code {
+    [Inject]
+    public required IAddressService AddressService { get; set; }
+
+    private AddressVm Vm { get; set; } = new();
+
+    private List<CountryDto> Countries { get; set; } = new();
+    private List<StateDto> States { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        Countries = GetCountries();
+        States = GetStates();
+    }
+
+    private void OnCountryChanged(int countryId)
+    {
+        States = AddressService.GetStates(countryId);
+        Vm.CountryId = countryId;
+    }
+
+    private List<StateDto> GetStates()
+    {
+        return AddressService.GetStates(Vm.CountryId);
+    }
+
+    private List<CountryDto> GetCountries()
+    {
+        return AddressService.GetCountries();
+    }
+
+    public class AddressVm
+    {
+        public string? CityName { get; set; }
+        public int CountryId { get; set; }
+        public int StateId { get; set; }
+    }
+}
