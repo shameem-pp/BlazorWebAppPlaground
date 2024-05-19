@@ -1,11 +1,10 @@
 ﻿namespace BlazorWebAppPlaground.Infra;
 
-public class ExampleDI
+public class Transient
 {
     public static int Count { get; private set; }
-    public ExampleDI()
+    public Transient()
     {
         Count++;
     }
-
 }

@@ -1,24 +1,62 @@
-﻿
-@page "/serviceLifeTimeExample"
+﻿@page "/serviceLifeTimeExample"
 @using System.Text.Json
 @rendermode RenderMode.InteractiveAuto
 
-<h1> Total objects created : @TotalNoOfObjectsCreated</h1>
-<button @onclick="OnRequest">Request</button>
+<h1>Two objects are used in each request</h1>
+
+<div style="display:flex; gap:10px;margin:10px;">
+    <button @onclick="GetSingletonCountAsync">Get Singleton Count</button>
+    <h1> Total objects created : @SingletonCount</h1>
+</div>
+<div style="display:flex; gap:10px;margin:10px;">
+    <button @onclick="GetScoppedCountAsync">Get Scopped Count</button>
+    <h1> Total objects created : @ScoppedCount</h1>
+</div>
+<div style="display:flex; gap:10px;margin:10px;">
+    <button @onclick="GetTransientCountAsync">Get Transient Count</button>
+    <h1> Total objects created : @TransientCount</h1>
+</div>
 
 @code
 {
     [Inject]
     public required HttpClient HttpClient { get; set; }
-    public int TotalNoOfObjectsCreated { get; set; }
 
-    private async Task OnRequest()
+    private const string BaseAddress = "/servicelifetime";
+
+    public int SingletonCount { get; set; }
+    public int ScoppedCount { get; set; }
+    public int TransientCount { get; set; }
+
+
+    private async Task GetSingletonCountAsync()
+    {
+        var requestUri = $"{BaseAddress}/singleton";
+
+        SingletonCount = await GetCountAsync(requestUri);
+    }
+
+    private async Task GetScoppedCountAsync()
+    {
+        var requestUri = $"{BaseAddress}/scopped";
+
+        ScoppedCount = await GetCountAsync(requestUri);
+    }
+
+    private async Task GetTransientCountAsync()
+    {
+        var requestUri = $"{BaseAddress}/transient";
+
+        TransientCount = await GetCountAsync(requestUri);
+    }
+
+    private async Task<int> GetCountAsync(string requestUri)
     {
         var httpResponse = await HttpClient
-            .GetAsync("/servicelifetimeendpoint");
+           .GetAsync(requestUri);
 
         var response = await httpResponse.Content.ReadAsStringAsync();
-        TotalNoOfObjectsCreated = JsonSerializer.Deserialize<int>(response);
+        return JsonSerializer.Deserialize<int>(response);
     }
 }
 

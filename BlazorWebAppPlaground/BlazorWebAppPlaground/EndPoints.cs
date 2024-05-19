@@ -11,19 +11,25 @@ public static class EndPoints
     {
         app.MapPost("createCategories", 
             CreateCategoriesCommand.SeedAsync);
-        app.MapGet("servicelifetimeendpoint", GetCount);
-
+        var group = app.MapGroup("servicelifetime");
+        group.MapGet("/singleton", GetSingletonCount);
+        group.MapGet("/scopped", GetScoppedCount);
+        group.MapGet("/transient", GetTransientCount);
         return app;
     }
 
-    private static IResult GetCount([FromServices] ExampleDI e1,
-        [FromServices] ExampleDI e2)
+    private static IResult GetScoppedCount([FromServices] Scopped e1,
+        [FromServices] Scopped e2)
     {
-        return Results.Ok(ExampleDI.Count);
+        return Results.Ok(Scopped.Count);
     }
 
-    private static IResult GetCount2([FromServices] ExampleDI e1) =>
-        Results.Ok(ExampleDI.Count);
+    private static IResult GetSingletonCount([FromServices] Singleton e1) =>
+        Results.Ok(Singleton.Count);
+
+    private static IResult GetTransientCount([FromServices] Transient e1,
+                                             [FromServices] Transient e2) =>
+        Results.Ok(Transient.Count);
 
 }
 

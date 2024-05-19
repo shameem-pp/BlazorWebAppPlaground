@@ -17,7 +17,9 @@ services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
 
-services.AddTransient<ExampleDI>();
+services.AddSingleton<Singleton>();
+services.AddScoped<Scopped>();
+services.AddTransient<Transient>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
