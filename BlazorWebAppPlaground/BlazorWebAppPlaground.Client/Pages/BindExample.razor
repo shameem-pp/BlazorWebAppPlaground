@@ -1,0 +1,15 @@
+﻿@page "/bindexample"
+@rendermode RenderMode.InteractiveAuto
+
+<h3>BindExample</h3>
+
+<input type="text" @bind="Value" @bind:event="oninput" />
+<h1>Parent :@Value</h1>
+
+<ChildBindExample @bind-ParentValue="Value" />
+
+@code {
+    public string? Value { get; set; }
+
+
+}

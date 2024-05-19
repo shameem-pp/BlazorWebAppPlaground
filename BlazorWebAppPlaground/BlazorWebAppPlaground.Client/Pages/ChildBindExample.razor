@@ -1,0 +1,17 @@
+﻿@rendermode RenderMode.InteractiveAuto
+
+<h3>ChildBindExample</h3>
+
+<input type="text" @onkeyup="UpdateAsync" @bind="ParentValue" @bind:event="oninput"/>
+@code {
+    [Parameter]
+    public string? ParentValue { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ParentValueChanged { get; set; }
+
+    private async Task UpdateAsync()
+    {
+        await ParentValueChanged.InvokeAsync(ParentValue);
+    }
+}
