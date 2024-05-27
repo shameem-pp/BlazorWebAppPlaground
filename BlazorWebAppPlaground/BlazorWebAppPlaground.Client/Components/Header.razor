@@ -1,0 +1,21 @@
+@using BlazorWebAppPlaground.Client.States
+@rendermode RenderMode.InteractiveAuto
+@inject CartState _cartState
+
+@CartCount
+
+
+@code{
+    public int CartCount { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _cartState.OnCartCountChanged += OnCartCountChanged;
+    }
+
+    private void OnCartCountChanged(int cartCount)
+    {
+        CartCount = cartCount;
+        StateHasChanged();
+    }
+}

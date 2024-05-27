@@ -1,0 +1,18 @@
+﻿@page "/CommunicationBetweenIndirectComponent"
+@using BlazorWebAppPlaground.Client.States
+@rendermode RenderMode.InteractiveAuto
+@inject CartState _state
+
+<h3>Communication Between Indirect Component</h3>
+
+
+<button @onclick="Increment" class="btn btn-primary">Cart count : @CartCount</button>
+@code {
+    public int CartCount { get; set; }
+
+    private void Increment()
+    {
+        CartCount++;
+        _state.OnCartCountChanged?.Invoke(CartCount);
+    }
+}
